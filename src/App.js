@@ -17,7 +17,22 @@ function ZipSearchField(props) {
 }
 
 function City(props) {
-  return <div>This is the City component</div>;
+  return (
+  <div class="card mt-5 mb-5">
+    <div class="card-header">
+      NEW YORK, NY
+    </div>
+    <div class="card-body">
+      <ul>
+        <li>State: NY</li>
+        <li>Location: (40.77, -73.95)</li>
+        <li>Population (estimated): 42627</li>
+        <li>Total Wages: 1022024689</li>
+      </ul>
+    </div>
+  </div>
+  );
+
 }
 
 function App() {
