@@ -6,23 +6,23 @@ function ZipSearchField(props) {
     console.log("Input changed!");
   }
   return (
-    <div>
-      <form>
-        <label>Zip Code:</label>
-        <br/>
-        <input onChange={handleChange}></input>
-      </form>
-    </div>
+    <form>
+      <div className="form-group">
+        <label htmlFor="zipCodeInput">Zip Code:</label>
+        <input className="form-control" id="zipCodeInput" placeholder="Enter zip code" onChange={handleChange} />
+        <small className="form-text text-muted">Zip codes should have 5 digits.</small>
+      </div>
+    </form>
   );
 }
 
 function City(props) {
   return (
-  <div class="card mt-5 mb-5">
-    <div class="card-header">
+  <div className="card mt-5 mb-5">
+    <div className="card-header">
       NEW YORK, NY
     </div>
-    <div class="card-body">
+    <div className="card-body">
       <ul>
         <li>State: NY</li>
         <li>Location: (40.77, -73.95)</li>
@@ -39,6 +39,7 @@ function App() {
   const [zipSearch, setZipSearch] = useState("")
   const [foundCities, setFoundCities] = useState([])
 
+  // remember to show "No results found" when no city components are being shown!
   return (
     <div className="App">
       <div className="App-header">
