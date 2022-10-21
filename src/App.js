@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import "./App.css";
 
-function ZipSearchField(props) {
-  const handleChange = () => {
-    console.log("Input changed!");
-  }
+function ZipSearchField({handleChange}) {
   return (
     <form>
-      <div className="form-group">
+      <div className="form-group mt-5 mb-5">
         <label htmlFor="zipCodeInput">Zip Code:</label>
         <input className="form-control" id="zipCodeInput" placeholder="Enter zip code" onChange={handleChange} />
         <small className="form-text text-muted">Zip codes should have 5 digits.</small>
@@ -39,6 +36,10 @@ function App() {
   const [zipSearch, setZipSearch] = useState("")
   const [foundCities, setFoundCities] = useState([])
 
+  const handleChange = () => {
+    console.log("Input changed!");
+  }
+
   // remember to show "No results found" when no city components are being shown!
   return (
     <div className="App">
@@ -46,7 +47,7 @@ function App() {
         <h1>Zip Code Search</h1>
       </div>
       <div className="mx-auto" style={{ maxWidth: 400 }}>
-        <ZipSearchField/>
+        <ZipSearchField handleChange={handleChange}/>
         <div>
           <City />
           <City />
