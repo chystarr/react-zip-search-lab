@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./App.css";
 
-function ZipSearchField({handleChange}) {
+function ZipSearchField({handleChange, zipInput}) {
   return (
     <form>
       <div className="form-group mt-5 mb-5">
         <label htmlFor="zipCodeInput">Zip Code:</label>
-        <input className="form-control" id="zipCodeInput" placeholder="Enter zip code" onChange={handleChange} />
+        <input className="form-control" id="zipCodeInput" placeholder="Enter zip code" onChange={handleChange} value={zipInput} />
         <small className="form-text text-muted">Zip codes should have 5 digits.</small>
       </div>
     </form>
@@ -33,12 +33,25 @@ function City(props) {
 }
 
 function App() {
-  const [zipSearch, setZipSearch] = useState("")
+  const [zipInput, setZipInput] = useState("")
   const [foundCities, setFoundCities] = useState([])
 
-  const handleChange = () => {
-    console.log("Input changed!");
-  }
+  const handleChange = (event) => {
+    const input = event.target.value;
+    if (input.length === 5) {
+      zipSearch(input);
+    }
+  };
+
+  const zipSearch = (input) => {
+    fetch("https://ctp-zip-api.herokuapp.com/zip/" + input)
+    .then((response) => {
+      return response.json();
+    })
+    .then((jsonBody) => {
+      console.log(jsonBody[0]);
+    });
+  };
 
   // remember to show "No results found" when no city components are being shown!
   return (
@@ -47,7 +60,7 @@ function App() {
         <h1>Zip Code Search</h1>
       </div>
       <div className="mx-auto" style={{ maxWidth: 400 }}>
-        <ZipSearchField handleChange={handleChange}/>
+        <ZipSearchField handleChange={handleChange} value={zipInput}/>
         <div>
           <City />
           <City />
