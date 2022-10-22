@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
-function ZipSearchField({handleChange, zipInput}) {
+function ZipSearchField({handleInputChange, zipInput}) {
   return (
     <form>
       <div className="form-group mt-5 mb-5">
         <label htmlFor="zipCodeInput">Zip Code:</label>
-        <input className="form-control" id="zipCodeInput" placeholder="Enter zip code" onChange={handleChange} value={zipInput} />
+        <input className="form-control" id="zipCodeInput" placeholder="Enter zip code" onChange={handleInputChange} value={zipInput} />
         <small className="form-text text-muted">Zip codes should have 5 digits.</small>
       </div>
     </form>
   );
 }
 
-function City(props) {
+function Cities(props) {
   return (
   <div className="card mt-5 mb-5">
     <div className="card-header">
@@ -36,20 +36,30 @@ function App() {
   const [zipInput, setZipInput] = useState("")
   const [foundCities, setFoundCities] = useState([])
 
-  const handleChange = (event) => {
+  const handleInputChange = (event) => {
     const input = event.target.value;
-    if (input.length === 5) {
-      zipSearch(input);
-    }
+    setZipInput(input);
   };
 
-  const zipSearch = (input) => {
-    fetch("https://ctp-zip-api.herokuapp.com/zip/" + input)
+  // Causes zipSearch() to be called when zipInput is updated
+  useEffect(() =>{
+    if (zipInput.length === 5) {
+      zipSearch();
+    }
+  }, [zipInput]);
+
+  const zipSearch = () => {
+    fetch("https://ctp-zip-api.herokuapp.com/zip/" + zipInput)
     .then((response) => {
       return response.json();
     })
     .then((jsonBody) => {
-      console.log(jsonBody[0]);
+      const cities = [];
+      for (let cityInfo of jsonBody) {
+        console.log(cityInfo);
+        cities.push(cityInfo);
+      }
+      setFoundCities(cities);
     });
   };
 
@@ -60,10 +70,9 @@ function App() {
         <h1>Zip Code Search</h1>
       </div>
       <div className="mx-auto" style={{ maxWidth: 400 }}>
-        <ZipSearchField handleChange={handleChange} value={zipInput}/>
+        <ZipSearchField handleInputChange={handleInputChange} value={zipInput}/>
         <div>
-          <City />
-          <City />
+          <Cities foundCities={foundCities}/>
         </div>
       </div>
     </div>
