@@ -6,30 +6,37 @@ function ZipSearchField({handleInputChange, zipInput}) {
     <form>
       <div className="form-group mt-5 mb-5">
         <label htmlFor="zipCodeInput">Zip Code:</label>
-        <input className="form-control" id="zipCodeInput" placeholder="Enter zip code" onChange={handleInputChange} value={zipInput} />
+        <input className="form-control" id="zipCodeInput" placeholder="Enter zip code"
+        onChange={handleInputChange} value={zipInput} />
         <small className="form-text text-muted">Zip codes should have 5 digits.</small>
       </div>
     </form>
   );
 }
 
-function Cities(props) {
-  return (
-  <div className="card mt-5 mb-5">
-    <div className="card-header">
-      NEW YORK, NY
-    </div>
-    <div className="card-body">
-      <ul>
-        <li>State: NY</li>
-        <li>Location: (40.77, -73.95)</li>
-        <li>Population (estimated): 42627</li>
-        <li>Total Wages: 1022024689</li>
-      </ul>
-    </div>
-  </div>
-  );
-
+function Cities({foundCities}) {
+  if (foundCities.length === 0) {
+    return (
+      <strong>No results found</strong>
+    );
+  } else {
+    return (<div>{foundCities.map((cityInfo, index) => (
+      <div key={index} className="card mt-5 mb-5">
+        <div className="card-header">
+          {cityInfo.City}, {cityInfo.State}
+        </div>
+        <div className="card-body">
+          <ul>
+            <li>State: {cityInfo.State}</li>
+            <li>Location: ({cityInfo.Lat}, {cityInfo.Long})</li>
+            <li>Population (estimated): {cityInfo.EstimatedPopulation}</li>
+            <li>Total Wages: {cityInfo.TotalWages}</li>
+          </ul>
+        </div>
+      </div>
+    ))}</div>
+    );
+  }
 }
 
 function App() {
@@ -45,8 +52,10 @@ function App() {
   useEffect(() =>{
     if (zipInput.length === 5) {
       zipSearch();
+    } else {
+      setFoundCities([]); // Whenever input zip code is not 5 digits, no cities should be displayed
     }
-  }, [zipInput]);
+  }, [zipInput]); // ?
 
   const zipSearch = () => {
     fetch("https://ctp-zip-api.herokuapp.com/zip/" + zipInput)
@@ -63,7 +72,6 @@ function App() {
     });
   };
 
-  // remember to show "No results found" when no city components are being shown!
   return (
     <div className="App">
       <div className="App-header">
@@ -71,9 +79,7 @@ function App() {
       </div>
       <div className="mx-auto" style={{ maxWidth: 400 }}>
         <ZipSearchField handleInputChange={handleInputChange} value={zipInput}/>
-        <div>
-          <Cities foundCities={foundCities}/>
-        </div>
+        <Cities foundCities={foundCities}/>
       </div>
     </div>
   );
